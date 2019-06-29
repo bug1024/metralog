@@ -30,8 +30,9 @@ public class CatInput implements MetralogInput {
     private ChannelFuture channelFuture;
 
     public CatInput() {
-        this.bossGroup = new NioEventLoopGroup();
-        this.workerGroup = new NioEventLoopGroup();
+        int threads = 24;
+        this.bossGroup = new NioEventLoopGroup(threads);
+        this.workerGroup = new NioEventLoopGroup(threads);
         this.serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)

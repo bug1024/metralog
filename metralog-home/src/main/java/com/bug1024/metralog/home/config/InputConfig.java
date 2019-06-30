@@ -1,5 +1,6 @@
 package com.bug1024.metralog.home.config;
 
+import com.bug1024.metralog.consumer.MetralogConsumer;
 import com.bug1024.metralog.input.cat.CatInput;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +25,7 @@ public class InputConfig implements ApplicationListener<ContextRefreshedEvent> {
         if (contextRefreshedEvent.getApplicationContext().getParent() == null) {
             try {
                 CatInput input = CatInput.getInstance();
+                input.setMetralogConsumer(new MetralogConsumer());
                 input.setPort(catPort);
                 input.init();
                 log.warn("CatInput init success port:{}", catPort);

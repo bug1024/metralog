@@ -9,8 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>metralog-input</artifactId>
-
+    <artifactId>metralog-client</artifactId>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
@@ -21,16 +20,12 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.bug1024.metralog</groupId>
-            <artifactId>metralog-consumer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.bug1024.metralog</groupId>
-            <artifactId>metralog-client</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
 

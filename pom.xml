@@ -11,8 +11,9 @@
     <modules>
         <module>metralog-input</module>
         <module>metralog-output</module>
-        <module>metralog-analyzer</module>
+        <module>metralog-consumer</module>
         <module>metralog-home</module>
+        <module>metralog-client</module>
     </modules>
 
     <parent>
@@ -29,6 +30,7 @@
         <mysql-connector-java.version>5.1.45</mysql-connector-java.version>
         <netty-all.version>4.1.25.Final</netty-all.version>
         <lombok.version>1.16.18</lombok.version>
+        <guava.version>22.0</guava.version>
     </properties>
 
     <dependencyManagement>
@@ -45,12 +47,17 @@
             </dependency>
             <dependency>
                 <groupId>com.bug1024.metralog</groupId>
-                <artifactId>metralog-analyzer</artifactId>
+                <artifactId>metralog-consumer</artifactId>
                 <version>${metralog.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.bug1024.metralog</groupId>
                 <artifactId>metralog-home</artifactId>
+                <version>${metralog.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bug1024.metralog</groupId>
+                <artifactId>metralog-client</artifactId>
                 <version>${metralog.version}</version>
             </dependency>
 
@@ -80,6 +87,24 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.1.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

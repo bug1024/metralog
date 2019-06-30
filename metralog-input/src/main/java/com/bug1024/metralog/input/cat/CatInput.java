@@ -1,19 +1,28 @@
 package com.bug1024.metralog.input.cat;
 
+import com.bug1024.metralog.consumer.MetralogConsumer;
 import com.bug1024.metralog.input.MetralogInput;
+import com.dianping.cat.message.io.BufReleaseHelper;
 import com.dianping.cat.message.io.ClientMessageEncoder;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.ByteToMessageDecoder;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 /**
  * tcp server
  * @author bug1024
  * @date 2019-06-29
  */
+@Slf4j
 public class CatInput implements MetralogInput {
 
     private static class CatInputWrapper {
@@ -53,6 +62,16 @@ public class CatInput implements MetralogInput {
         serverBootstrap.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
     }
 
+    private MetralogConsumer metralogConsumer;
+
+    public MetralogConsumer getMetralogConsumer() {
+        return metralogConsumer;
+    }
+
+    public void setMetralogConsumer(MetralogConsumer metralogConsumer) {
+        this.metralogConsumer = metralogConsumer;
+    }
+
     private int port;
 
     public int getPort() {
@@ -66,5 +85,43 @@ public class CatInput implements MetralogInput {
     @Override
     public void init() {
         this.channelFuture = this.serverBootstrap.bind(getPort());
+    }
+
+
+    public class MessageDecoder extends ByteToMessageDecoder {
+
+        @Override
+        protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {
+            if (buffer.readableBytes() < 4) {
+                return;
+            }
+            buffer.markReaderIndex();
+            int length = buffer.readInt();
+            buffer.resetReaderIndex();
+            if (buffer.readableBytes() < length + 4) {
+                return;
+            }
+            try {
+                if (length > 0) {
+                    ByteBuf readBytes = buffer.readBytes(length + 4);
+
+                    readBytes.markReaderIndex();
+
+                    DefaultMessageTree tree = (DefaultMessageTree) CodecHandler.decode(readBytes);
+
+                    readBytes.resetReaderIndex();
+                    tree.setBuffer(readBytes);
+
+                    // handle message tree
+                    metralogConsumer.handle(tree);
+                } else {
+                    // client message is error
+                    buffer.readBytes(length);
+                    BufReleaseHelper.release(buffer);
+                }
+            } catch (Exception e) {
+                log.error("decode message error", e);
+            }
+        }
     }
 }

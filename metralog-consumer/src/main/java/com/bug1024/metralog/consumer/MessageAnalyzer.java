@@ -1,4 +1,4 @@
-package com.bug1024.metralog.consumer.task;
+package com.bug1024.metralog.consumer;
 
 import com.dianping.cat.message.spi.MessageQueue;
 
@@ -9,4 +9,6 @@ import com.dianping.cat.message.spi.MessageQueue;
 public interface MessageAnalyzer {
 
     void process(MessageQueue messageQueue);
+
+    ReportManager getReportManager();
 }
